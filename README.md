@@ -15,14 +15,18 @@ Utilizatorul își va putea seta anumiți parametri în rețea pentru a experime
 
 ## C/C++  ##
 Acest proiect folosește compilatorul de C/C++.
-Nu este obligatoriu de instalat separat de OMNET++.
+Nu este necesar de instalat separat de simulatorul de OMNET++.
 
 ## OMNET++  ##
 Acest proiect folosește OMNET++ 6.0.1.
 Proiectul nu va funcționa pentru o versiune mai veche de OMNET++, iar pentru o versiune mai nouă pot apărea erori.
-Dacă nu aveți OMNET++ 6.0.1 instalat, îl puteți descărca la următoarea adresă:
+Dacă nu aveți OMNET++ 6.0.1 instalat, îl puteți descărca la următoarea adresă, secțiunea 6.0.1:
 ```shell
 https://omnetpp.org/download/old
+```
+Instalarea simulatorului OMNET++ are loc după documentația de pe linkul: 
+```shell
+https://doc.omnetpp.org/omnetpp/InstallGuide.pdf
 ```
 ## Pornirea aplicației ##
 TBD
