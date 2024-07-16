@@ -13,16 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-simple Source{
+
+simple MADM_SAW_Algorithm{
     parameters:
-        double MAX_SIM_TIME @unit(ms) = default(100000 ms);
-        double simCycle @unit(ms) = default(0.1 ms);
-        //MaximumTransmissionUnit - 1,500 bytes is the maximum MTU size. Expected 1400 - 1500;
-        int fileSplitSize; //bytes
-        int fileSize; //bytes
-    
-    
-    gates:
-        output txPackets; //packets to server
-        input rxEOF; // EOF message from server
+    	int networkSize;
+	gates:
+	    input rxTransferRates[networkSize]; //recieves the transfer rates for the SAW algorithm
+	    output txSelection;    //sends the networks with the best selection
+ 	   
 }
