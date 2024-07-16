@@ -16,17 +16,16 @@
 simple Server{
     parameters:
         int networkSize;
-        double simCycle @unit(ms) = default(10 ms);
     
     gates:
         input rxPackets; //file splits recieved from Source
         //input rxFuzzyAlg; //data from LFA
-        //input rxcsAlg;		//data from Consumer Selection Alg
+        input rxAlg;		//data from Alg
         input rxDestEOF;	//EOF message from the destination
         input rxNetwork[networkSize]; //to recieve transfer rate from each network
         output txSourceEOF;  //EOF message to generator to restart the file generator
         //output txFuzzy; //communication to fuzzy
-        //output txCustomerSelectAlgorithm; //communication to cs algorithm
+        output txAlgorithm[networkSize]; //communication to cs algorithm
         output txNetwork[networkSize]; //data files sent to the network
 
         

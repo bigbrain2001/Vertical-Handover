@@ -24,8 +24,8 @@ simple extCondAnalyzer{
      input rxLoad;
      input rxRadio;
      input rxServer;
-     output txDestination;
-	 output txServer;
+     output txDestination; //sends the packets from the server through the netowrk to it's destination
+	 output txServer; //sends the transfer rate to the server
      
      
 }

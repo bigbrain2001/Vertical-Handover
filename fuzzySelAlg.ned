@@ -13,16 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-simple Source{
-    parameters:
-        double MAX_SIM_TIME @unit(ms) = default(100000 ms);
-        double simCycle @unit(ms) = default(0.1 ms);
-        //MaximumTransmissionUnit - 1,500 bytes is the maximum MTU size. Expected 1400 - 1500;
-        int fileSplitSize; //bytes
-        int fileSize; //bytes
+
+simple fuzzySelAlg{
+ parameters:
+     
+ gates:
+     input rxServer;
+     output txServer;   
     
-    
-    gates:
-        output txPackets; //packets to server
-        input rxEOF; // EOF message from server
 }

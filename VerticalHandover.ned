@@ -17,6 +17,7 @@ import Source;
 import Server;
 import Destination;
 import NetworkUMTS;
+import MADM_SAW_Algorithm;
 
 network VerticalHandover
 {
@@ -39,9 +40,11 @@ network VerticalHandover
             @display("p=270,138");
         }
 
-        netWork[networkSize]: NetworkUMTS {
+        netWork[networkSize]: NetworkUMTS;
 
-            //@display("p=180,138");
+        SAW_ALG: MADM_SAW_Algorithm {
+            networkSize = parent.networkSize;
+            @display("p=83,212");
         }
 
 
@@ -51,10 +54,12 @@ network VerticalHandover
 
         dest.txSourceEOF --> Server.rxDestEOF; //send a message to the generator that the whole file(all packets) has been recieved and to start sending a new one
         Server.txSourceEOF --> Source.rxEOF;
+        SAW_ALG.txSelection --> Server.rxAlg;
 
 
         for i=0..networkSize - 1 {
             Server.txNetwork[i] --> netWork[i].rxDataServer;
+            Server.txAlgorithm[i] --> SAW_ALG.rxTransferRates[i];
             netWork[i].txCondServer --> Server.rxNetwork[i];
             netWork[i].txDestination --> dest.rxData[i];
         }
