@@ -19,6 +19,7 @@ simple loadCondGen{
      double cellLoadTimeModifier @unit(s);
      double meanForCellNormaldistriburion;
      double deviationCellNormalDistribution;
+     int UMTS_capacity;
  gates:
  //input rxCondGen;
  output txCondGen;   

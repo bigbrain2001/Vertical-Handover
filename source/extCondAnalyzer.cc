@@ -19,6 +19,7 @@ void extCondAnalyzer::initialize()
     //sendMessageEvent = new cMessage("start");
     //condL = par("init_cell_tc;").doubleValue()*1000.0;
     //condR = par("init_radio_tc").doubleValue()*1000.0;
+    capacity = par("UMTS_capacity").intValue();
     //cMessage *condition = new cMessage("Condition");
     //condition->addPar("transferRate");
     //condition->par("transferRate") = minimum(condL,condR);
@@ -29,8 +30,10 @@ void extCondAnalyzer::initialize()
 
 void extCondAnalyzer::sendTR(double cell, double radio){
     cMessage *condition = new cMessage("Condition");
+    condition->addPar("netLoad");
+    condition->par("netLoad") = ((minimum(cell,radio)*100.0) / (double)capacity); //network capacity in the meaning of %
     condition->addPar("transferRate");
-    condition->par("transferRate") = minimum(cell,radio);
+    condition->par("transferRate") = std::max(8000.0,minimum(cell,radio)); //a minimum of 8kbps transfer rate
     send(condition,"txServer");
 }
 

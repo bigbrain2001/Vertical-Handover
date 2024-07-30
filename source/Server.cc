@@ -19,6 +19,7 @@ void Server::initialize()
     sendMessageEvent = new cMessage("start");
     queue.setName("queue");
     nrNetworks = par("networkSize").intValue();
+    alg_select = par("selection").intValue();
     for(int i=0;i<nrNetworks;i++){
         networkTransferRates[i] = 0;
     }
@@ -49,7 +50,7 @@ void Server::handleMessage(cMessage *msg)
 {
     if(msg->arrivedOn("rxPackets")){
             queue.insert(msg);
-        if(init_contor >= nrNetworks-1){
+        if(!waiting_for_Alg){
             if(!(sendMessageEvent->isScheduled())){
                 scheduleAt(simTime(),sendMessageEvent);
             }
@@ -59,19 +60,14 @@ void Server::handleMessage(cMessage *msg)
     else if(msg->arrivedOn("rxNetwork")){
         for(int i=0;i < nrNetworks;i++){
             if(msg->arrivedOn("rxNetwork",i)){
-                send(msg,"txAlgorithm",i);
-                //double transfer = (double)msg->par("transferRate");
-                //networkTransferRates[i] = transfer;
-                //EV << "Transfer rate network " << i << " " << networkTransferRates[i] <<endl;
-                //delete msg;
-                //if(init_contor < nrNetworks-1){
-                    //init_contor++;
-                //}
-                //else{
-                    //if(!(sendMessageEvent->isScheduled())){
-                        //scheduleAt(simTime(),sendMessageEvent);
-                    //}
-                //}
+                if(!alg_select){
+                    send(msg,"txAlgorithm",i);
+                }
+                else{
+                    EV << "NetworkLoad " << i << " " << (double)msg->par("netLoad") << endl;
+                    send(msg,"txFuzzy",i);
+                }
+                waiting_for_Alg = true;
 
             }
         }
@@ -79,7 +75,7 @@ void Server::handleMessage(cMessage *msg)
     else if(msg->arrivedOn("rxDestEOF")){
         send(msg,"txSourceEOF");//restarts the generator
     }
-    else if(msg->arrivedOn("rxAlg")){
+    else if(msg->arrivedOn("rxAlg") || msg->arrivedOn("rxFuzzyAlg")){
         waiting_for_Alg = false;
         transfer_rate = (double)msg->par("Transfer_Rate");
         chosenNet = (int)msg->par("select_network");

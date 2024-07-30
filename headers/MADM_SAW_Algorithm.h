@@ -26,9 +26,13 @@ protected:
     virtual void handleMessage(cMessage *msg);
     int nrNetworks;
     double networkTransferRates[10];
-    double networkWeights[10];
+    double CriteriaForSAW[10][2];
+    double networkLoad[10];
+    double networkWeights[2] = {0.4, 0.6};
     int init_contor=0;
     void doSAW();
+    double scaleValues(double orig_min, double orig_max, double new_min, double new_max, double value);
+    double calculateScoreSAW(double criteria, double weight);
     void sendMessage();
 };
 

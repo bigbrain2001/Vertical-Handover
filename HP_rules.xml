@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<FLC>
+
+	<n_bits axis="x">
+		   <value>100</value>
+	</n_bits>
+	<m_bits axis="y">
+		   <value>4</value>
+	</m_bits>
+	<n_inp>
+		   <value>2</value>
+	</n_inp>
+	<n_rules>
+		<value>16</value>
+	</n_rules>
+	<delta>
+		<value>0</value>
+	</delta>
+
+	<!--Fuzzy set for the first input, NetworkLoad-->
+	<fuzzy_set type="input" index="1"  nterms="4">
+		<term>
+			<name>L</name>
+			<xa>0</xa>
+			<xb>0</xb>
+			<xc>18</xc>
+			<xd>24</xd>
+		</term>
+		<term>
+			<name>M</name>
+			<xa>18</xa>
+			<xb>30</xb>
+			<xc>43</xc>
+			<xd>49</xd>
+		</term>
+		<term>
+			<name>H</name>
+			<xa>43</xa>
+			<xb>49</xb>
+			<xc>68</xc>
+			<xd>74</xd>
+		</term>
+		<term>
+			<name>VH</name>
+			<xa>68</xa>
+			<xb>74</xb>
+			<xc>99</xc>
+			<xd>99</xd>
+		</term>
+	</fuzzy_set>
+	<!--Fuzzy set for the first input, UserPreference-->
+	<fuzzy_set type="input" index="2"  nterms="4">
+		<term>
+			<name>L</name>
+			<xa>0</xa>
+			<xb>0</xb>
+			<xc>18</xc>
+			<xd>24</xd>
+		</term>
+		<term>
+			<name>M</name>
+			<xa>18</xa>
+			<xb>30</xb>
+			<xc>43</xc>
+			<xd>49</xd>
+		</term>
+		<term>
+			<name>H</name>
+			<xa>43</xa>
+			<xb>49</xb>
+			<xc>68</xc>
+			<xd>74</xd>
+		</term>
+		<term>
+			<name>VH</name>
+			<xa>68</xa>
+			<xb>74</xb>
+			<xc>99</xc>
+			<xd>99</xd>
+		</term>
+	</fuzzy_set>
+	
+	
+	<!--Fuzzy set for the output TREBE SIMETRIE MAXIM WIP-->
+	<fuzzy_set type="output" nterms="4">
+		<term>
+			<name>SR</name>
+			<xa>9</xa>
+			<xb>9</xb>
+			<xc>9</xc>
+			<xd>9</xd>
+		</term>
+		<term>
+			<name>WR</name>
+			<xa>34</xa>
+			<xb>34</xb>
+			<xc>34</xc>
+			<xd>34</xd>
+		</term>
+		<term>
+			<name>WS</name>
+			<xa>64</xa>
+			<xb>64</xb>
+			<xc>64</xc>
+			<xd>64</xd>
+		</term>
+		<term>
+			<name>SS</name>
+			<xa>89</xa>
+			<xb>89</xb>
+			<xc>89</xc>
+			<xd>89</xd>
+		</term>
+		
+	</fuzzy_set>
+
+	<!--number of rules = product(number of membership functions for each input)-->	
+
+	<!--number of premises = number of input variables-->
+	<rule>
+		<p1>L</p1>
+		<p2>L</p2>
+		<c>WR</c>
+	</rule>
+
+	<rule>
+		<p1>L</p1>
+		<p2>M</p2>
+		<c>WS</c>
+	</rule>
+
+	<rule>
+		<p1>L</p1>
+		<p2>H</p2>
+		<c>SS</c>
+	</rule>
+	<rule>
+		<p1>L</p1>
+		<p2>VH</p2>
+		<c>SS</c>
+	</rule>
+	<rule>
+		<p1>M</p1>
+		<p2>L</p2>
+		<c>WR</c>
+	</rule>
+
+	<rule>
+		<p1>M</p1>
+		<p2>M</p2>
+		<c>WS</c>
+	</rule>
+
+	<rule>
+		<p1>M</p1>
+		<p2>H</p2>
+		<c>SS</c>
+	</rule>
+	<rule>
+		<p1>M</p1>
+		<p2>VH</p2>
+		<c>SS</c>
+	</rule>
+
+	<rule>
+		<p1>H</p1>
+		<p2>L</p2>
+		<c>WR</c>
+	</rule>
+
+	<rule>
+		<p1>H</p1>
+		<p2>M</p2>
+		<c>WS</c>
+	</rule>
+	<rule>
+		<p1>H</p1>
+		<p2>H</p2>
+		<c>WS</c>
+	</rule>
+
+	<rule>
+		<p1>H</p1>
+		<p2>VH</p2>
+		<c>SS</c>
+	</rule>
+
+	<rule>
+		<p1>VH</p1>
+		<p2>L</p2>
+		<c>SR</c>
+	</rule>
+	
+	<rule>
+		<p1>VH</p1>
+		<p2>M</p2>
+		<c>WR</c>
+	</rule>
+
+	<rule>
+		<p1>VH</p1>
+		<p2>H</p2>
+		<c>WS</c>
+	</rule>
+
+	<rule>
+		<p1>VH</p1>
+		<p2>VH</p2>
+		<c>SS</c>
+	</rule>
+</FLC>

@@ -18,11 +18,14 @@ import Server;
 import Destination;
 import NetworkUMTS;
 import MADM_SAW_Algorithm;
+import FLC;
 
 network VerticalHandover
 {
     parameters:
         int networkSize;
+        int UMTS_capacity;
+        int selection;
 
         @display("bgb=337,284");
     submodules:
@@ -31,6 +34,7 @@ network VerticalHandover
             @display("p=28,138");
         }
         Server: Server {
+            selection = parent.selection;
             networkSize = parent.networkSize;
             @display("p=83,138");
         }
@@ -40,17 +44,27 @@ network VerticalHandover
             @display("p=270,138");
         }
 
-        netWork[networkSize]: NetworkUMTS;
+        networkUMTS[networkSize]: NetworkUMTS {
+            UMTS_capacity = parent.UMTS_capacity; //1024Mb
+            //@display("p=167,138");
+        }
 
         SAW_ALG: MADM_SAW_Algorithm {
             networkSize = parent.networkSize;
             @display("p=83,212");
+        }
+        fuzzySelAlg: FLC {
+			networkSize = parent.networkSize;
+            @display("p=83,72");
         }
 
 
     connections:
 
         Source.txPackets --> Server.rxPackets; //Generating Data to the server and storing it in a buffer
+        fuzzySelAlg.txServer --> Server.rxFuzzyAlg;
+
+
 
         dest.txSourceEOF --> Server.rxDestEOF; //send a message to the generator that the whole file(all packets) has been recieved and to start sending a new one
         Server.txSourceEOF --> Source.rxEOF;
@@ -58,10 +72,12 @@ network VerticalHandover
 
 
         for i=0..networkSize - 1 {
-            Server.txNetwork[i] --> netWork[i].rxDataServer;
+            Server.txFuzzy[i] --> fuzzySelAlg.rxServer[i];
+                    
+            Server.txNetwork[i] --> networkUMTS[i].rxDataServer;
             Server.txAlgorithm[i] --> SAW_ALG.rxTransferRates[i];
-            netWork[i].txCondServer --> Server.rxNetwork[i];
-            netWork[i].txDestination --> dest.rxData[i];
+            networkUMTS[i].txCondServer --> Server.rxNetwork[i];
+            networkUMTS[i].txDestination --> dest.rxData[i];
         }
 
 
