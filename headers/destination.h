@@ -20,10 +20,10 @@ private:
     cHistogram lifetimeStats[20];
     cHistogram lifetimeStats_per_file[20];
     int fileSize[20];
-    int currentFile=0;;
+    int currentFile=0;
+    int algorithm_selected;
     int netSize;
     int filesize=0;
-    int first_pack;
     int total_IP_size=0;
 };
 

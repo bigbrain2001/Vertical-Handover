@@ -17,6 +17,7 @@
 simple Destination{
  parameters:
      int networkSize;
+     int selection;
      
  gates:
   	input rxData[networkSize];
