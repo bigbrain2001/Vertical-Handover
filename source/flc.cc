@@ -283,9 +283,10 @@ class FLC : public cSimpleModule
 	int nb_terms[MAX_NR_INP+1];
 	int networkSize;
 	int bestNetwork=-1;
-	double best_result = -1000;
+	//double best_result = -1000;
 	double networkLoad[10];
 	double transferRates[10];
+	int best_fuzzy_results[10];
 	Term* m_functions[MAX_NR_INP+1][MAX_NR_TERMS]; /* membership functions for input and output*/
 	int** rules;
 	cOutVector qtime,qtimew;
@@ -312,6 +313,7 @@ void FLC::initialize()
     for(int i=0; i< networkSize;i++){
         networkLoad[i] = 0;
         transferRates[i] = 0;
+        best_fuzzy_results[i] = 0;
     }
 
    cXMLElement *rootelement = par("config").xmlValue();
@@ -592,7 +594,7 @@ void FLC::handleMessage(cMessage *msg)
     }
     else{
         bestNetwork = -1;
-        best_result = -1;
+        //best_result = -1;
         for(int i=0;i < networkSize; i++){
             ev << "Calculez nou HP" << endl;
             //int wantedDelay = 10;//(int)getParentModule()->par("delayLimit");
@@ -622,21 +624,26 @@ void FLC::handleMessage(cMessage *msg)
 
             int res = round(scale(0, 99, 0, 100, result));
             ev<<" Result = "<<result<<"\nRes= "<<res<<"\n";
-            if(res > best_result){
-                best_result = res;
+            best_fuzzy_results[i] = res;
+            //if(res > best_result){
+                //best_result = res;
+
+                //bestNetwork = i;
+            //}
+        }
+        int best_result=-1;
+        int best_transfer = -1;
+        for(int i=0;i<networkSize;i++){
+            if(best_result < best_fuzzy_results[i]){
+                best_transfer = transferRates[i];
                 bestNetwork = i;
             }
-
-            //res_dep.record (res);
-
-            //new_W_HP = new_W_HP + res;
-
-            //if (new_W_HP>B) new_W_HP = B-1;
-            //if (new_W_HP<1) new_W_HP = 1;
-
-            //ev<<"Pondere noua: "<<new_W_HP<<"\n\n";
+            else if(best_result == best_fuzzy_results[i]){
+                if(best_transfer < transferRates[i]){
+                    bestNetwork = i;
+                }
+            }
         }
-
         //qtimew.record(new_W_HP);
         cMessage *job = new cMessage("Selection");
         job->addPar("Transfer_Rate");
