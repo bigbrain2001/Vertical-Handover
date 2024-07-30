@@ -31,6 +31,8 @@ module NetworkUMTS{
  	 //double init_radio_transfer_capacity;
  	 //double init_cell_transfer_capacity;
  	 
+ 	 int UMTS_capacity;
+ 	 
  		
  	gates:
  	    //input rxCondServer; //for updating loadCondGen
@@ -42,7 +44,7 @@ module NetworkUMTS{
  	        //cellLoadTimeModifier = parent.cellLoadTimeModifier;
  	        //meanForCellNormaldistriburion = parent.meanForCellNormaldistriburion;
  	        //deviationCellNormalDistribution = parent.deviationCellNormalDistribution;
- 	        
+ 	        UMTS_capacity = parent.UMTS_capacity;
  	        
  	    }    
  	    radioCondition: radioCondGen{
@@ -54,6 +56,7 @@ module NetworkUMTS{
  	    extConditionAnalyzer: extCondAnalyzer{
  	        //init_cell_tc = parent.init_cell_transfer_capacity;
  	        //init_radio_tc = parent.init_radio_transfer_capacity;
+ 	        UMTS_capacity = parent.UMTS_capacity;
  	    }
  	    
     connections:

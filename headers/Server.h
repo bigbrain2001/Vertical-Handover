@@ -27,7 +27,7 @@ private:
     bool waiting_for_Alg = true;
     double transfer_rate;
     int chosenNet;
-    int init_contor=0;
+    int alg_select;
     //double fastest_transfer_rate_change_time = DBL_MAX;
     //double changeTime[20];
 };

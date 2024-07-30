@@ -36,6 +36,7 @@ void Destination::handleMessage(cMessage *msg)
                 filesize=0;
                 emit(lifetimeSignal_per_file,lifetime);
                 if(currentFile >= 10){ //we need to count latest 10 files
+                    delete msg;
                     endSimulation();
                 }
                 cMessage *startFileTransfer = new cMessage("file_recieved");

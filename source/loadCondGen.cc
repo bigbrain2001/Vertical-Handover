@@ -10,6 +10,7 @@ Define_Module(loadCondGen);
 void loadCondGen::initialize()
 {
     sendMessageEvent = new cMessage("start");
+    capacity = par("UMTS_capacity").intValue();
 
     cellLoadTime = par("cellLoadTimeModifier").doubleValue();
 
@@ -29,7 +30,7 @@ void loadCondGen::initialize()
     //generator.seed(seed);
     normal_dist = std::normal_distribution<double>(mean, deviation);
 
-    scheduleAt(simTime(), sendMessageEvent);
+    scheduleAt(simTime()+cellLoadTime, sendMessageEvent);
 
 }
 
@@ -40,12 +41,11 @@ void loadCondGen::handleMessage(cMessage *msg)
 
     // Make sure the randomness is within the range [32, 384] kbps
     randomness = std::max(32.0, std::min(384.0, randomness));
-    randomness = randomness*1000;
 
     //double randomness = 256.0; //temp
     cMessage *dataL = new cMessage("dataL");
     dataL->addPar("CurrentCellLoad");
-    dataL->par("CurrentCellLoad") = 1024000000 - randomness; //to correctly measure in kilo
+    dataL->par("CurrentCellLoad") = (double)capacity - randomness; //to correctly measure in kilo
     send(dataL,"txCondGen");
 
     scheduleAt(simTime()+cellLoadTime, sendMessageEvent);

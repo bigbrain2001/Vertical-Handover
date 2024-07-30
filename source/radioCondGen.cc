@@ -30,7 +30,7 @@ void radioCondGen::initialize()
     generator.seed(rd());
     //generator.seed(seed);
     normal_dist = std::normal_distribution<double>(meanNormal, deviationNormal);
-    scheduleAt(simTime(), sendMessageEvent);
+    scheduleAt(simTime()+cellLoadTime, sendMessageEvent);
 
 }
 
@@ -39,7 +39,7 @@ void radioCondGen::handleMessage(cMessage *msg)
 
     double randomness = normal_dist(generator);
 
-    // Ensure the randomness is within the range [32, 384] kBps
+    // Ensure the randomness is within the range [32, 384] kbps
     randomness = std::max(32.0, std::min(384.0, randomness));
     //double randomness = 256.0; //temp
     cMessage *dataR = new cMessage("dataR");

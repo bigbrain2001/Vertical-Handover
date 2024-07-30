@@ -18,6 +18,7 @@ class loadCondGen : public cSimpleModule
     double cellLoadTime;
     double mean;
     double deviation;
+    int capacity;
     std::default_random_engine generator;
     std::normal_distribution<double> normal_dist;
 };

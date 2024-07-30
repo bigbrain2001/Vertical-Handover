@@ -18,6 +18,7 @@ class extCondAnalyzer : public cSimpleModule
     cMessage *sendMessageEvent;
     double condR=0;
     double condL=0;
+    int capacity;
     double timeL;
     double timeR;
     unsigned short int init_delay=0;
