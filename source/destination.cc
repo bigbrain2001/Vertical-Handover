@@ -10,7 +10,7 @@ void Destination::initialize()
     lifetimeSignal = registerSignal("lifetime");
     lifetimeSignal_per_file = registerSignal("lifetimeSignal_per_file");
     netSize = par("networkSize").intValue();
-    first_pack = 0;
+    algorithm_selected = par("selection").intValue();
 }
 
 void Destination::handleMessage(cMessage *msg)
@@ -57,21 +57,42 @@ void Destination::handleMessage(cMessage *msg)
 
 
 void Destination::finish(){
-    FILE *networkR;
-    networkR = fopen("results_networks.txt", "a");
-    for(int i = 0; i < netSize; i++){
-        fprintf(networkR, "%d, %.4f, %.2f, %.2f, %d\n",  i, lifetimeStats[i].getMean(), lifetimeStats[i].getMin(), lifetimeStats[i].getMax(), lifetimeStats[i].getCount() ); ///import csv in excel si se baga automan in excel
-        //char buf[40];
-        //sprintf(buf, "my lifetime user%d", i);
-        //lifetimeStats[i].recordAs(buf);
-    }
-    //fprintf(fp, "%.2f, %.3f\n", NetworkLoad, sendingTime);
-    fclose(networkR);
+    if(algorithm_selected == 0){ //MADM
+        FILE *networkR;
+        networkR = fopen("MADM_results_networks.txt", "a");
+        for(int i = 0; i < netSize; i++){
+            fprintf(networkR, "%d, %.4f, %.2f, %.2f, %d\n",  i, lifetimeStats[i].getMean(), lifetimeStats[i].getMin(), lifetimeStats[i].getMax(), lifetimeStats[i].getCount() ); ///import csv in excel si se baga automan in excel
+            //char buf[40];
+            //sprintf(buf, "my lifetime user%d", i);
+            //lifetimeStats[i].recordAs(buf);
+        }
+        //fprintf(fp, "%.2f, %.3f\n", NetworkLoad, sendingTime);
+        fclose(networkR);
 
-    FILE *fileR;
-    fileR = fopen("results_files.txt", "a");
-    for(int i = 0; i < 10; i++){
-        fprintf(fileR, "%d, %.4f, %.2f, %.2f, %.2f, %d\n",  i, lifetimeStats_per_file[i].getMean(), lifetimeStats_per_file[i].getMin(), lifetimeStats_per_file[i].getMax(), (double)lifetimeStats_per_file[i].getMean()/(double)fileSize[i] ,fileSize[i] ); ///import csv in excel si se baga automan in excel
+        FILE *fileR;
+        fileR = fopen("MADM_results_files.txt", "a");
+        for(int i = 0; i < 10; i++){
+            fprintf(fileR, "%d, %.4f, %.2f, %.2f, %.2f, %d\n",  i, lifetimeStats_per_file[i].getMean(), lifetimeStats_per_file[i].getMin(), lifetimeStats_per_file[i].getMax(), (double)lifetimeStats_per_file[i].getMean()/(double)fileSize[i] ,fileSize[i] ); ///import csv in excel si se baga automan in excel
+        }
+        fclose(fileR);
+    } else{ //FUZZY
+        FILE *networkR;
+        networkR = fopen("FUZZY_results_networks.txt", "a");
+        for(int i = 0; i < netSize; i++){
+            fprintf(networkR, "%d, %.4f, %.2f, %.2f, %d\n",  i, lifetimeStats[i].getMean(), lifetimeStats[i].getMin(), lifetimeStats[i].getMax(), lifetimeStats[i].getCount() ); ///import csv in excel si se baga automan in excel
+            //char buf[40];
+            //sprintf(buf, "my lifetime user%d", i);
+            //lifetimeStats[i].recordAs(buf);
+        }
+        //fprintf(fp, "%.2f, %.3f\n", NetworkLoad, sendingTime);
+        fclose(networkR);
+
+        FILE *fileR;
+        fileR = fopen("FUZZY_results_files.txt", "a");
+        for(int i = 0; i < 10; i++){
+            fprintf(fileR, "%d, %.4f, %.2f, %.2f, %.2f, %d\n",  i, lifetimeStats_per_file[i].getMean(), lifetimeStats_per_file[i].getMin(), lifetimeStats_per_file[i].getMax(), (double)lifetimeStats_per_file[i].getMean()/(double)fileSize[i] ,fileSize[i] ); ///import csv in excel si se baga automan in excel
+        }
+        fclose(fileR);
     }
-    fclose(fileR);
 }
+

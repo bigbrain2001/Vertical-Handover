@@ -1,0 +1,1 @@
+file0, meanDelay, mindelay, maxdelay, delay_per_bit, packetCount

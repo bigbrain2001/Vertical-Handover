@@ -40,6 +40,7 @@ network VerticalHandover
         }
 
         dest: Destination {
+            selection = parent.selection;
             networkSize = parent.networkSize;
             @display("p=270,138");
         }
