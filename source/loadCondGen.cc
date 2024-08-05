@@ -17,7 +17,15 @@ void loadCondGen::initialize()
     cMessage *dataL = new cMessage("dataL");
     init_cell_transfer_capacity = par("init_cell_transfer_capacity").doubleValue()*1000.0; //to measure in kilo
     dataL->addPar("CurrentCellLoad");
-    dataL->par("CurrentCellLoad") = init_cell_transfer_capacity;
+    double load;
+    if(init_cell_transfer_capacity < 8){
+        load = 8;
+    }
+    else{
+        load = init_cell_transfer_capacity;
+    }
+
+    dataL->par("CurrentCellLoad") = load*1000;
     send(dataL,"txCondGen");
 
     mean = par("meanForCellNormaldistriburion").doubleValue();
@@ -45,7 +53,7 @@ void loadCondGen::handleMessage(cMessage *msg)
     //double randomness = 256.0; //temp
     cMessage *dataL = new cMessage("dataL");
     dataL->addPar("CurrentCellLoad");
-    dataL->par("CurrentCellLoad") = (double)capacity - randomness; //to correctly measure in kilo
+    dataL->par("CurrentCellLoad") = (double)capacity - randomness*1000; //to correctly measure in kilo
     send(dataL,"txCondGen");
 
     scheduleAt(simTime()+cellLoadTime, sendMessageEvent);

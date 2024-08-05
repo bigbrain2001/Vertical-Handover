@@ -18,6 +18,7 @@ simple Destination{
  parameters:
      int networkSize;
      int selection;
+     int net_load_select;
      
  gates:
   	input rxData[networkSize];

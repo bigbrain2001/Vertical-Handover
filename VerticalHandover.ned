@@ -26,7 +26,9 @@ network VerticalHandover
         int networkSize;
         int UMTS_capacity;
         int selection;
-
+        int file_Size_min;
+        int file_Size_max;
+		int net_load_select;
         @display("bgb=337,284");
     submodules:
         Source: Source {
@@ -41,12 +43,14 @@ network VerticalHandover
 
         dest: Destination {
             selection = parent.selection;
+            net_load_select = parent.net_load_select;
             networkSize = parent.networkSize;
             @display("p=270,138");
         }
 
         networkUMTS[networkSize]: NetworkUMTS {
             UMTS_capacity = parent.UMTS_capacity; //1024Mb
+            net_load_select = parent.net_load_select;
             //@display("p=167,138");
         }
 

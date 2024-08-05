@@ -19,19 +19,8 @@ import extCondAnalyzer;
 
 module NetworkUMTS{
     parameters:
-     //double radioTimeModifier @unit(s); //time for reschedule of the module
-     //double cellLoadTimeModifier @unit(s);
-     
-     //double meanForCellNormaldistriburion;
-     //double meanForRadioNormaldistriburion;
-     
-     //double radioDeviationNormalValue;
-     //double deviationCellNormalDistribution;
-     
- 	 //double init_radio_transfer_capacity;
- 	 //double init_cell_transfer_capacity;
- 	 
- 	 int UMTS_capacity;
+        int net_load_select;
+ 	 	int UMTS_capacity;
  	 
  		
  	gates:
@@ -41,26 +30,17 @@ module NetworkUMTS{
  	    output txDestination;   //to send the data further to the destination
  	submodules:
  	    loadCondition: loadCondGen{
- 	        //cellLoadTimeModifier = parent.cellLoadTimeModifier;
- 	        //meanForCellNormaldistriburion = parent.meanForCellNormaldistriburion;
- 	        //deviationCellNormalDistribution = parent.deviationCellNormalDistribution;
- 	        UMTS_capacity = parent.UMTS_capacity;
- 	        
+ 	        UMTS_capacity = parent.UMTS_capacity; 
  	    }    
  	    radioCondition: radioCondGen{
- 	        //radioTimeModifier = parent.radioTimeModifier;
- 	        //radioDeviationNormalValue = parent.radioDeviationNormalValue;
- 	        //meanForRadioNormaldistriburion = parent.meanForRadioNormaldistriburion;
- 	        //init_radio_transfer_capacity = parent.init_radio_transfer_capacity;
+
  	    }
  	    extConditionAnalyzer: extCondAnalyzer{
- 	        //init_cell_tc = parent.init_cell_transfer_capacity;
- 	        //init_radio_tc = parent.init_radio_transfer_capacity;
+			net_load_select = parent.net_load_select;
  	        UMTS_capacity = parent.UMTS_capacity;
  	    }
  	    
     connections:
-        //rxCondServer --> loadCondition.rxCondGen; //if chosen, will increase/decrease the load due to users
         loadCondition.txCondGen --> extConditionAnalyzer.rxLoad; //sends the cell load condition to the analyzer
         radioCondition.txRCondGen --> extConditionAnalyzer.rxRadio; //sends the radio condition to the analyzer
         extConditionAnalyzer.txDestination --> txDestination; //sends the data to destination
