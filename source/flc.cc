@@ -589,7 +589,7 @@ void FLC::handleMessage(cMessage *msg)
 
         }
     }
-    if(init_contor < networkSize){
+    if(init_contor <= networkSize){
         init_contor++;
     }
     else{

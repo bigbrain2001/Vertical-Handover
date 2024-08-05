@@ -90,3 +90,9 @@ void Server::handleMessage(cMessage *msg)
 
 }
 
+void Server::finish(){
+    while(!queue.isEmpty()){
+        cMessage *msg = (cMessage *)queue.pop();
+        delete msg;
+    }
+}

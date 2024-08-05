@@ -20,6 +20,8 @@ simple Source{
         //MaximumTransmissionUnit - 1,500 bytes is the maximum MTU size. Expected 1400 - 1500;
         int fileSplitSize; //bytes
         int fileSize; //bytes
+        int file_Size_min;
+        int file_Size_max;
     
     
     gates:

@@ -18,8 +18,7 @@
 simple extCondAnalyzer{
  
  parameters:
- 	//double init_cell_tc;
- 	//double init_radio_tc;
+	int net_load_select;
  	int UMTS_capacity;
  gates:
      input rxLoad;

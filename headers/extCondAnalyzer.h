@@ -15,10 +15,15 @@ class extCondAnalyzer : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
     double minimum(double cell, double radio);
     void sendTR(double cell,double radio);
+    double calculate_cell_load();
     cMessage *sendMessageEvent;
     double condR=0;
     double condL=0;
+    double current_cap=0;;
     int capacity;
+    int net_load_select;
+    double netLoad[5];
+    unsigned short int pointer=0;
     double timeL;
     double timeR;
     unsigned short int init_delay=0;

@@ -21,6 +21,7 @@ private:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
     void processQueues(double transfer, int retea);
+    void finish();
     cQueue queue;
     int nrNetworks;
     double networkTransferRates[10];

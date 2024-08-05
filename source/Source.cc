@@ -16,8 +16,10 @@ Source::~Source()
 
 void Source::initialize()
 {
+    file_Size_min = par("file_Size_min").intValue();
+    file_Size_max = par("file_Size_max").intValue();
+    file_Size = (int)uniform(file_Size_min, file_Size_max);
     sendMessageEvent = new cMessage("start");
-    file_Size = par("fileSize").intValue();
     currentfileSize = file_Size*8;
     file_split_size = 1500*8;
     //file_split_size = par("fileSize").intValue();
@@ -71,6 +73,7 @@ void Source::handleMessage(cMessage *msg)
         }
     }
     else if(msg->arrivedOn("rxEOF")){
+        file_Size = (int)uniform(file_Size_min,file_Size_max);
         currentfileSize = file_Size*8; //resets file size
         delete msg;
         //cancelAndDelete(sendMessageEvent);
