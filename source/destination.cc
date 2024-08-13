@@ -1,6 +1,7 @@
 #include "headers/destination.h"
 #include <string>
 #include <omnetpp/csimplemodule.h>
+#include <omnetpp.h>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -12,29 +13,64 @@ void Destination::initialize()
 {
     lifetimeSignal = registerSignal("lifetime");
     lifetimeSignal_per_file = registerSignal("lifetimeSignal_per_file");
+    packetDelay.setName("packetDelay");
+    file_delay.setName("fileDelay");
+
+
+
     netSize = par("networkSize").intValue();
     algorithm_selected = par("selection").intValue();
     net_load_selected = par("net_load_select").intValue();
+    MADM_selection = par("MADM_selection").intValue();
+    packets_per_network0.setName("packets_per_network0");
+    packets_per_network1.setName("packets_per_network1");
+    packets_per_network2.setName("packets_per_network2");
+
+
 }
 
 void Destination::handleMessage(cMessage *msg)
 {
 
     simtime_t lifetime = simTime() - msg->getCreationTime();
-
+    int endOfFile = (int)msg->par("EOF");
     for(int i=0;i < netSize; i++){
         if(msg->arrivedOn("rxData",i)){
             EV << "Message arrived on gate: " << i << endl;
-            filesize += (int)msg->par("packetSize");
+            int packetSize = (int)msg->par("packetSize");
+            delete msg;
+            filesize += packetSize;
             lifetimeStats[i].collect(lifetime);
+            packetDelay.record(lifetime);
+
+            switch(i){
+            case 0:{
+                packets_per_network0.record(packetSize);
+                break;
+            }
+            case 1:{
+                packets_per_network1.record(packetSize);
+                break;
+            }
+            case 2:{
+                packets_per_network2.record(packetSize);
+                break;
+            }
+            default:{
+                std::cout << "Add more vectors to gather more data for networks" << endl;
+                exit(1);
+            }
+            }
+
         }
     }
 
     emit(lifetimeSignal, lifetime);
-    int endOfFile = (int)msg->par("EOF");
+
     EV << "Received " << endOfFile << endl;
     if(endOfFile == 1){
         lifetimeStats_per_file[currentFile].collect(lifetime); //collect mean_delay for the file
+        file_delay.record(lifetime);
         fileSize[currentFile] = filesize;
         currentFile++;
         filesize=0;
@@ -49,11 +85,8 @@ void Destination::handleMessage(cMessage *msg)
 
     }
 
-    delete msg;
 
-    //used to collect data of all IP packets for all networks
 
-    //int size = (int)msg->par("packetSize");
 
 
 
@@ -63,11 +96,20 @@ void Destination::handleMessage(cMessage *msg)
 void Destination::write_statistics(const std::string& file_name_net,const std::string& file_name_files){
     std::ofstream name(file_name_net, std::ios::app); //(name, append)
     for (int i = 0; i < netSize; i++) {
+        if(lifetimeStats[i].getCount() == 0){
+            name << i << ", "
+                    << std::fixed << std::setprecision(4) << 0 << ", " ///fixed -> writes the data normally, without scientific number
+                    << std::fixed << std::setprecision(2) << 0 << ", " //precision is similar to %.2f and such
+                    << std::fixed << std::setprecision(2) << 0 << ", "
+                    << lifetimeStats[i].getCount() << std::endl;
+        }
+        else{
         name << i << ", "
                 << std::fixed << std::setprecision(4) << lifetimeStats[i].getMean() << ", " ///fixed -> writes the data normally, without scientific number
                 << std::fixed << std::setprecision(2) << lifetimeStats[i].getMin() << ", " //precision is similar to %.2f and such
                 << std::fixed << std::setprecision(2) << lifetimeStats[i].getMax() << ", "
                 << lifetimeStats[i].getCount() << std::endl;
+        }
     }
 
     std::ofstream name2(file_name_files, std::ios::app);
@@ -85,32 +127,107 @@ void Destination::write_statistics(const std::string& file_name_net,const std::s
 
         }
     }
+    name.close();
+    name2.close();
 }
 
 
 void Destination::finish(){
     if(algorithm_selected == 0){ //MADM
-        switch(net_load_selected){
-        case 0:{ //Last netLoad selection
-            std::string network = "results_txt/MADM_results_networks_LAST.txt";
-            std::string file = "results_txt/MADM_results_files_LAST.txt";
-            write_statistics(network, file);
-            break;
-        }
-        case 1:{ //average network load selection
-            std::string network = "results_txt/MADM_results_networks_AVG.txt";
-            std::string file = "results_txt/MADM_results_files_AVG.txt";
-            write_statistics(network, file);
+        switch(MADM_selection){
+        case 0:{
+            switch(net_load_selected){
+            case 0:{ //Last netLoad selection
+                std::string network = "results_txt/SAW_results_networks_LAST.txt";
+                std::string file = "results_txt/SAW_results_files_LAST.txt";
+                write_statistics(network, file);
+                break;
+            }
+            case 1:{ //average network load selection
+                std::string network = "results_txt/SAW_results_networks_AVG.txt";
+                std::string file = "results_txt/SAW_results_files_AVG.txt";
+                write_statistics(network, file);
+                break;
+            }
+
+            default:
+                std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
+                exit(1);
+            }
             break;
         }
 
-        default:
-            std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
+        case 1:{
+            switch(net_load_selected){
+            case 0:{ //Last netLoad selection
+                std::string network = "results_txt/TOPSIS_results_networks_LAST.txt";
+                std::string file = "results_txt/TOPSIS_results_files_LAST.txt";
+                write_statistics(network, file);
+                break;
+            }
+            case 1:{ //average network load selection
+                std::string network = "results_txt/TOPSIS_results_networks_AVG.txt";
+                std::string file = "results_txt/TOPSIS_results_files_AVG.txt";
+                write_statistics(network, file);
+                break;
+            }
+
+            default:
+                std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
+                exit(1);
+            }
+            break;
+        }
+        case 2:{
+            switch(net_load_selected){
+            case 0:{ //Last netLoad selection
+                std::string network = "results_txt/MAXMIN_results_networks_LAST.txt";
+                std::string file = "results_txt/MAXMIN_results_files_LAST.txt";
+                write_statistics(network, file);
+                break;
+            }
+            case 1:{ //average network load selection
+                std::string network = "results_txt/MAXMIN_results_networks_AVG.txt";
+                std::string file = "results_txt/MAXMIN_results_files_AVG.txt";
+                write_statistics(network, file);
+                break;
+            }
+
+            default:{
+                std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
+                exit(1);
+            }
+            }
+            break;
+        }
+        case 3:{
+            switch(net_load_selected){
+            case 0:{ //Last netLoad selection
+                std::string network = "results_txt/MADM_results_networks_LAST.txt";
+                std::string file = "results_txt/MADM_results_files_LAST.txt";
+                write_statistics(network, file);
+                break;
+            }
+            case 1:{ //average network load selection
+                std::string network = "results_txt/MADM_results_networks_AVG.txt";
+                std::string file = "results_txt/MADM_results_files_AVG.txt";
+                write_statistics(network, file);
+                break;
+            }
+
+            default:{
+                std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
+                exit(1);
+            }
+            break;
+            }
+        }
+        default:{
+            std::cout << "ERROR WRITING SELECTING MADM ALGORITHM" << endl;
             exit(1);
         }
-
-
-
+        break;
+        }
 
     } else{ //FUZZY
         switch(net_load_selected){
@@ -127,9 +244,10 @@ void Destination::finish(){
             break;
         }
 
-        default:
+        default:{
             std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
             exit(1);
+        }
         }
     }
 }
