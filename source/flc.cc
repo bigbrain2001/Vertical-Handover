@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <iostream>
+#include <random>
 using namespace std;
 
 #define MAX_NR_TERMS 11
@@ -283,14 +284,16 @@ class FLC : public cSimpleModule
 	int nb_terms[MAX_NR_INP+1];
 	int networkSize;
 	int bestNetwork=-1;
+
+
 	//double best_result = -1000;
 	double networkLoad[10];
 	double transferRates[10];
 	int best_fuzzy_results[10];
 	Term* m_functions[MAX_NR_INP+1][MAX_NR_TERMS]; /* membership functions for input and output*/
 	int** rules;
-	cOutVector qtime,qtimew;
-	cOutVector res_dep, result_dep;
+	//cOutVector qtime,qtimew;
+	//cOutVector res_dep, result_dep;
 	Matrix* fuzzify(int crisp_in, int delta);
 	int defuzify(Matrix* mat);
 	double scale(double n, double m, double a, double b, double x);
@@ -304,11 +307,12 @@ Define_Module(FLC);
 
 void FLC::initialize()
 {
-    qtime.setName("delay vector");
-    qtimew.setName("weight vector");
-    result_dep.setName("result nescalat");
-    res_dep.setName("res scalat");
+    //qtime.setName("delay vector");
+    //qtimew.setName("weight vector");
+    //result_dep.setName("result nescalat");
+    //res_dep.setName("res scalat");
     networkSize = par("networkSize").intValue();
+
 
     for(int i=0; i< networkSize;i++){
         networkLoad[i] = 0;
@@ -605,13 +609,13 @@ void FLC::handleMessage(cMessage *msg)
             //int new_W_HP = W_HP;
             //int diff = wantedDelay - currentDelay;
 
-            int UP = 5;
+            int UP = uniform(0,100);
             int diff = (int)trunc(networkLoad[i]);
 
             //qtime.record (currentDelay);
             ev<<" Dif nescalat = "<<diff<<"\n";
 
-            diff = scale(0, 99, 0, 100, diff); //original vector WIP
+            diff = scale(0, 99, 0, 100, diff); //original vector
             UP = scale(0, 99, 0, 100, UP);
             ev<<" Dif scalat = "<<diff<<"\n";
 

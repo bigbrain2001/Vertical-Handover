@@ -20,6 +20,7 @@ simple extCondAnalyzer{
  parameters:
 	int net_load_select;
  	int UMTS_capacity;
+ 	double battery_consumption;
  gates:
      input rxLoad;
      input rxRadio;

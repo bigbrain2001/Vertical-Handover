@@ -9,7 +9,7 @@ class Server : public cSimpleModule
 {
 private:
     cMessage *sendMessageEvent;
-    double MAX_SIM;
+    //double MAX_SIM;
     int file_Size;
     int file_split_size;
 
@@ -24,7 +24,7 @@ private:
     void finish();
     cQueue queue;
     int nrNetworks;
-    double networkTransferRates[10];
+    double networkTransferRates[20];
     bool waiting_for_Alg = true;
     double transfer_rate;
     int chosenNet;

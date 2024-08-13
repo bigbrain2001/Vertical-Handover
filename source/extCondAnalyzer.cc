@@ -17,6 +17,15 @@ double extCondAnalyzer::minimum(double cell, double radio){
     }
 }
 
+double extCondAnalyzer::maximum(double cell, double radio){
+    if(cell < radio){
+        return radio;
+    }
+    else{
+        return cell;
+    }
+}
+
 void extCondAnalyzer::initialize()
 {
     //sendMessageEvent = new cMessage("start");
@@ -24,6 +33,7 @@ void extCondAnalyzer::initialize()
     //condR = par("init_radio_tc").doubleValue()*1000.0;
     capacity = par("UMTS_capacity").intValue();
     net_load_select = par("net_load_select").intValue();
+    battery_consumption = par("battery_consumption").doubleValue();
     for(int i = 0;i < LAST_LOAD_NUMBER;i++){
         netLoad[i] = 0;
     }
@@ -57,7 +67,9 @@ void extCondAnalyzer::sendTR(double cell, double radio){
     }
 
     condition->addPar("transferRate");
-    condition->par("transferRate") = condL;
+    condition->par("transferRate") = minimum(capacity,maximum(8000, minimum(condL,condR))); //also checks for a minimum of 8kbps transfer rate and a maximum of the cell capacity
+    condition->addPar("battery_consumption");
+    condition->par("battery_consumption") = battery_consumption;
     send(condition,"txServer");
 }
 
@@ -66,7 +78,7 @@ void extCondAnalyzer::handleMessage(cMessage *msg)
 {
 
     if(msg->arrivedOn("rxRadio")){
-        int dataR = (int)msg->par("PossibleTransferRate");
+        double dataR = (double)msg->par("PossibleTransferRate");
         condR = dataR;
         delete msg;
         if(init_delay < 1){
@@ -80,9 +92,13 @@ void extCondAnalyzer::handleMessage(cMessage *msg)
 
     }
     else if(msg->arrivedOn("rxLoad")){
-        int dataL = (int)msg->par("CurrentCellLoad");
+        double dataL = (double)msg->par("CurrentCellLoad");
         condL = dataL; //transferRate
-        netLoad[pointer] = (condL/(double)capacity); //a minimum of 8kbps transfer rate
+        if(condL > (double)capacity){
+            condL = (double)capacity; //checks to not send more than maximum capacity
+        }
+        double loads = (condL/(double)capacity);
+        netLoad[pointer] = loads; //a minimum of 8kbps transfer rate
         current_cap = netLoad[pointer];
         pointer++;
         if(pointer >= LAST_LOAD_NUMBER){
@@ -99,10 +115,10 @@ void extCondAnalyzer::handleMessage(cMessage *msg)
     }
     //sends the IP packet to it's destination
     else if (msg->arrivedOn("rxServer")){
-        send(msg,"txDestination");
+            send(msg,"txDestination");
+
     }
 
-
-
-
 }
+
+

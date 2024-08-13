@@ -9,7 +9,9 @@ using namespace omnetpp;
 
 class loadCondGen : public cSimpleModule
 {
-
+    public:
+    loadCondGen();
+    virtual ~loadCondGen();
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
@@ -18,7 +20,10 @@ class loadCondGen : public cSimpleModule
     double cellLoadTime;
     double mean;
     double deviation;
-    int capacity;
+    double capacity;
+    double cell_min;
+    double cell_max;
+    int seed;
     std::default_random_engine generator;
     std::normal_distribution<double> normal_dist;
 };
