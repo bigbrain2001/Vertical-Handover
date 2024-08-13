@@ -1,0 +1,3 @@
+network0, meanDelay, mindelay, maxdelay, packetCount
+0, nan, nan, nan, 0
+1, 1.5620, 0.02, 3.50, 670

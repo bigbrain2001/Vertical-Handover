@@ -19,6 +19,9 @@ simple radioCondGen{
      double meanForRadioNormaldistriburion;
      double radioDeviationNormalValue;
  	 double init_radio_transfer_capacity;
+ 	 int seed;
+ 	 double TransferRate_Min;
+     double TransferRate_Max;
  gates:
  output txRCondGen;   
     

@@ -17,6 +17,7 @@
 simple MADM_SAW_Algorithm{
     parameters:
     	int networkSize;
+    	int MADM_selection;
 	gates:
 	    input rxTransferRates[networkSize]; //recieves the transfer rates for the SAW algorithm
 	    output txSelection;    //sends the networks with the best selection

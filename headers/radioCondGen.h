@@ -10,6 +10,9 @@ using namespace omnetpp;
 class radioCondGen : public cSimpleModule
 {
 
+public:
+  radioCondGen();
+  virtual ~radioCondGen();
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
@@ -20,6 +23,9 @@ class radioCondGen : public cSimpleModule
     double meanNormal;
     double deviationNormal;
     double initRadioTransferCapacity;
+    int seed;
+    double radio_min;
+    double radio_max;
 };
 
 

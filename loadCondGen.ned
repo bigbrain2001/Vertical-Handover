@@ -20,6 +20,9 @@ simple loadCondGen{
      double meanForCellNormaldistriburion;
      double deviationCellNormalDistribution;
      int UMTS_capacity;
+     int seed;
+     double TransferRate_Min;
+     double TransferRate_Max;
  gates:
  //input rxCondGen;
  output txCondGen;   

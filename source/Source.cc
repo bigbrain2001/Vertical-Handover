@@ -38,9 +38,8 @@ void Source::handleMessage(cMessage *msg)
     if(simulationTime >= MAX_SIM){
         endSimulation();
     }
-
     //Splits the file into multiple IP packets over the course of self cycles and sends them to the storage element in the server
-    if(msg->isSelfMessage()){
+    else if(msg->isSelfMessage()){
         while(currentfileSize > 0){
             cMessage *file_part = new cMessage("file_part");
             //0 - not EOF, 1 - EOF and will result in getting a restart message of the generator

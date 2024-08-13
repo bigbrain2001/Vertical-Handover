@@ -8,6 +8,8 @@
 #ifndef HEADERS_MADM_SAW_ALGORITHM_H_
 #define HEADERS_MADM_SAW_ALGORITHM_H_
 
+#define n_colums 3
+
 #include <omnetpp.h>
 using namespace omnetpp;
 
@@ -25,15 +27,25 @@ protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
     int nrNetworks;
+    int MADM_selection;
     double networkTransferRates[10];
-    double CriteriaForSAW[10][2];
-    double networkLoad[10];
-    double networkWeights[2] = {0.4, 0.6};
+    double Criteria[10][n_colums];
+    double CriteriaForTOPSIS[10][n_colums];
+
+    double networkWeights[3] = {0.3, 0.5, 0.2};
     int init_contor=0;
-    void doSAW();
+    std::vector<int> ranks;
+
+    double minimum(double a, double b);
+    double maximum(double a, double b);
+    int doSAW();
+    int doMaxMin();
+    void sendSelection(int network, double transferRate);
     double scaleValues(double orig_min, double orig_max, double new_min, double new_max, double value);
     double calculateScoreSAW(double criteria, double weight);
-    void sendMessage();
+    void doTOPSIS();
+    double doSquaresColums(int column);
+    //void sendMessage();
 };
 
 #endif /* HEADERS_MADM_SAW_ALGORITHM_H_ */

@@ -1,1 +1,0 @@
-network0, meanDelay, mindelay, maxdelay, packetCount

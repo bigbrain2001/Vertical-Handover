@@ -21,7 +21,19 @@ module NetworkUMTS{
     parameters:
         int net_load_select;
  	 	int UMTS_capacity;
- 	 
+ 	 	double battery_consumption;
+ 	 	double radio_min;
+ 	 	double radio_max;
+ 	 	double cell_min;
+ 	 	double cell_max;
+ 	 	double init_radio;
+ 	 	double init_cell;
+ 	 	double radio_mean;
+ 	 	double radio_deviation;
+ 	 	double cell_mean;
+ 	 	double cell_deviation;
+ 	 	double radio_cycle @unit(s) = default(1s);
+ 	 	double cell_cycle @unit(s) = default(1s);
  		
  	gates:
  	    //input rxCondServer; //for updating loadCondGen
@@ -31,13 +43,25 @@ module NetworkUMTS{
  	submodules:
  	    loadCondition: loadCondGen{
  	        UMTS_capacity = parent.UMTS_capacity; 
+ 	        TransferRate_Min = parent.cell_min;
+ 	        TransferRate_Max = parent.cell_max;
+ 	        init_cell_transfer_capacity = parent.init_cell;
+ 	        cellLoadTimeModifier = parent.cell_cycle;
+ 	        meanForCellNormaldistriburion = parent.cell_mean;
+ 	        deviationCellNormalDistribution = parent.cell_deviation;
  	    }    
  	    radioCondition: radioCondGen{
-
+			TransferRate_Min = parent.radio_min;
+ 	        TransferRate_Max = parent.radio_max;
+ 	        init_radio_transfer_capacity = parent.init_radio;
+ 	        meanForRadioNormaldistriburion = parent.radio_mean;
+ 	        radioDeviationNormalValue = parent.radio_deviation;
+ 	        radioTimeModifier = parent.radio_cycle;
  	    }
  	    extConditionAnalyzer: extCondAnalyzer{
 			net_load_select = parent.net_load_select;
  	        UMTS_capacity = parent.UMTS_capacity;
+ 	        battery_consumption = parent.battery_consumption;
  	    }
  	    
     connections:
