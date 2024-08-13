@@ -31,4 +31,4 @@ https://doc.omnetpp.org/omnetpp/InstallGuide.pdf
 ## Pornirea aplicației ##
 TBD
 ## Documentație ##
-Documentația aferentă poate fi accesată la următorul link: TBD
+Documentația aferentă poate fi accesată la următorul link: [Vertical Handover](https://1drv.ms/w/c/415b077173bc1c17/ESk6yGzKxcxDgawS7EcLM2IB309CQbHhnH1kTpsYZgs_Mg?e=JJWD9O)
