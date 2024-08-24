@@ -4,21 +4,21 @@
 #include <float.h>
 #include <algorithm> //for std::sort
 
-Define_Module(MADM_SAW_Algorithm);
+Define_Module(MADM_Algorithm);
 
 
-MADM_SAW_Algorithm::MADM_SAW_Algorithm()
+MADM_Algorithm::MADM_Algorithm()
 {
     //sendMessageEvent = nullptr;
 }
 
-MADM_SAW_Algorithm::~MADM_SAW_Algorithm()
+MADM_Algorithm::~MADM_Algorithm()
 {
     //cancelAndDelete(sendMessageEvent);
 }
 
 
-void MADM_SAW_Algorithm::initialize(){
+void MADM_Algorithm::initialize(){
     nrNetworks = par("networkSize").intValue();
     MADM_selection = par("MADM_selection").intValue();
     for(int i=0;i<nrNetworks; i++){
@@ -26,7 +26,7 @@ void MADM_SAW_Algorithm::initialize(){
     }
 }
 
-void MADM_SAW_Algorithm::sendSelection(int network, double transferRate){
+void MADM_Algorithm::sendSelection(int network, double transferRate){
     cMessage *selection = new cMessage("selection");
     selection->addPar("select_network");
     selection->par("select_network") = network;
@@ -35,7 +35,7 @@ void MADM_SAW_Algorithm::sendSelection(int network, double transferRate){
     send(selection, "txSelection");
 }
 
-double MADM_SAW_Algorithm::scaleValues(double orig_min, double orig_max, double new_min, double new_max, double value){
+double MADM_Algorithm::scaleValues(double orig_min, double orig_max, double new_min, double new_max, double value){
     double scaled;
      if(value<=new_min)
          scaled = new_min;
@@ -47,13 +47,13 @@ double MADM_SAW_Algorithm::scaleValues(double orig_min, double orig_max, double 
     return scaled;
 }
 
-double MADM_SAW_Algorithm::calculateScoreSAW(double criteria, double weight){
+double MADM_Algorithm::calculateScoreSAW(double criteria, double weight){
     double score=0.0;
         score+= weight * criteria;
     return score;
 }
 
-int MADM_SAW_Algorithm::doSAW(){
+int MADM_Algorithm::doSAW(){
     double maxRate = 0;
     double maxValue[n_colums];
     double CriteriaForSAW[nrNetworks][n_colums];
@@ -74,21 +74,12 @@ int MADM_SAW_Algorithm::doSAW(){
         maxValue[i] = 0.0;
 
     }
-
-        /*for(int i = 0; i < nrNetworks;i++){
-            if(networkTransferRates[i] > maxRate){
-                maxRate = networkTransferRates[i];
-                //best_network = i;
-            }
-        }*/
-
     for(int i = 0; i < nrNetworks; i++){
         for(int j = 0; j < n_colums; j++){
             if(CriteriaForSAW[i][j] > maxValue[j]){
                 maxValue[j] = CriteriaForSAW[i][j];
             }
         }
-
     }
     for(int i=0;i< nrNetworks;i++){
         for(int j=0;j<n_colums;j++){
@@ -120,7 +111,7 @@ int MADM_SAW_Algorithm::doSAW(){
 }
 
 
-int MADM_SAW_Algorithm::doMaxMin(){
+int MADM_Algorithm::doMaxMin(){
     double CriteriaForMinMax[nrNetworks][n_colums];
     double bestValue = -1;
     int bestNetwork = -1;
@@ -132,19 +123,15 @@ int MADM_SAW_Algorithm::doMaxMin(){
                 minimumVal = CriteriaForMinMax[i][j];
             }
         }
-
         if(minimumVal > bestValue){
             bestValue = minimumVal;
             bestNetwork = i;
         }
     }
     return bestNetwork;
-    //sendSelection(bestNetwork, networkTransferRates[bestNetwork]);
-
-
 }
 
-double MADM_SAW_Algorithm::doSquaresColums(int column){
+double MADM_Algorithm::doSquaresColums(int column){
     double sum=0.0;
     for(int i=0;i<nrNetworks;i++){
             sum+= pow(CriteriaForTOPSIS[i][column],2);
@@ -152,21 +139,21 @@ double MADM_SAW_Algorithm::doSquaresColums(int column){
     return sqrt(sum);
 }
 
-double MADM_SAW_Algorithm::minimum(double a, double b){
+double MADM_Algorithm::minimum(double a, double b){
     if(a < b){
         return a;
     }
     else return b;
 }
 
-double MADM_SAW_Algorithm::maximum(double a, double b){
+double MADM_Algorithm::maximum(double a, double b){
     if(a > b){
         return a;
     }
     else return b;
 }
 
-void MADM_SAW_Algorithm::doTOPSIS(){
+void MADM_Algorithm::doTOPSIS(){
 
     double bestValue = -1;
     int bestNetwork = -1;
@@ -231,7 +218,7 @@ void MADM_SAW_Algorithm::doTOPSIS(){
     }
 }
 
-void MADM_SAW_Algorithm::handleMessage(cMessage *msg){
+void MADM_Algorithm::handleMessage(cMessage *msg){
     for(int i=0;i < nrNetworks; i++){
         if(msg->arrivedOn("rxTransferRates",i)){
             double transferRate = (double)msg->par("transferRate");
@@ -241,7 +228,7 @@ void MADM_SAW_Algorithm::handleMessage(cMessage *msg){
             Criteria[i][1] = netLoad;
             Criteria[i][2] = battery_consumption;
             delete msg;
-            if(init_contor < nrNetworks){
+            if(init_contor < nrNetworks-1){
                 init_contor++;
             }
             else{
