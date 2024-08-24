@@ -54,22 +54,16 @@ void radioCondGen::initialize()
 
 void radioCondGen::handleMessage(cMessage *msg)
 {
-
     double randomness = normal_dist(generator);
-
     // Ensure the randomness is within the range [radio_min, radio_max] kbps
     randomness = std::max(radio_min, std::min(radio_max, randomness));
-    //double randomness = 256.0; //temp
     cMessage *dataR = new cMessage("dataR");
     dataR->addPar("PossibleTransferRate");
-    double data = randomness*1000;
+    double data = randomness*1000; //kilo
     if(data < 8000){ //set a minimum of 8kbps transfer Rate
         data = 8000;
     }
-    dataR->par("PossibleTransferRate") = data;  //to correctly measure the transfer rate in kilo
+    dataR->par("PossibleTransferRate") = data;
     send(dataR,"txRCondGen");
-
     scheduleAt(simTime()+cellLoadTime, sendMessageEvent);
-
-
 }
