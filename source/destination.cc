@@ -11,8 +11,7 @@ Define_Module(Destination);
 
 void Destination::initialize()
 {
-    lifetimeSignal = registerSignal("lifetime");
-    lifetimeSignal_per_file = registerSignal("lifetimeSignal_per_file");
+
     packetDelay.setName("packetDelay");
     file_delay.setName("fileDelay");
 
@@ -38,34 +37,16 @@ void Destination::handleMessage(cMessage *msg)
         if(msg->arrivedOn("rxData",i)){
             EV << "Message arrived on gate: " << i << endl;
             int packetSize = (int)msg->par("packetSize");
+            nrPackets[i]++;
             delete msg;
             filesize += packetSize;
             lifetimeStats[i].collect(lifetime);
             packetDelay.record(lifetime);
 
-            switch(i){
-            case 0:{
-                packets_per_network0.record(packetSize);
-                break;
-            }
-            case 1:{
-                packets_per_network1.record(packetSize);
-                break;
-            }
-            case 2:{
-                packets_per_network2.record(packetSize);
-                break;
-            }
-            default:{
-                std::cout << "Add more vectors to gather more data for networks" << endl;
-                exit(1);
-            }
-            }
 
         }
     }
 
-    emit(lifetimeSignal, lifetime);
 
     EV << "Received " << endOfFile << endl;
     if(endOfFile == 1){
@@ -74,15 +55,12 @@ void Destination::handleMessage(cMessage *msg)
         fileSize[currentFile] = filesize;
         currentFile++;
         filesize=0;
-        emit(lifetimeSignal_per_file,lifetime);
         if(currentFile >= FILE_SIZE_-1){ //we need to count latest FILE_SIZE_ files
             std::cout << "Too many files sent to gather data, expand the memory buffer" << endl;
-            exit(1);//delete msg;
-            currentFile = 0;
+            exit(1);
         }
         cMessage *startFileTransfer = new cMessage("file_recieved");
         send(startFileTransfer,"txSourceEOF");
-
     }
 
 
@@ -133,6 +111,26 @@ void Destination::write_statistics(const std::string& file_name_net,const std::s
 
 
 void Destination::finish(){
+    for(int i=0;i<netSize;i++){
+        switch(i){
+        case 0:{
+            packets_per_network0.record(nrPackets[0]);
+            break;
+        }
+        case 1:{
+            packets_per_network1.record(nrPackets[1]);
+            break;
+        }
+        case 2:{
+            packets_per_network2.record(nrPackets[2]);
+            break;
+        }
+        default:{
+            std::cout << "Add more vectors to gather more data for networks" << endl;
+            exit(1);
+        }
+        }
+    }
     if(algorithm_selected == 0){ //MADM
         switch(MADM_selection){
         case 0:{
@@ -219,14 +217,13 @@ void Destination::finish(){
                 std::cout << "ERROR WRITING SELECTING NETLOAD ALGORITHM" << endl;
                 exit(1);
             }
-            break;
             }
+            break;
         }
         default:{
             std::cout << "ERROR WRITING SELECTING MADM ALGORITHM" << endl;
             exit(1);
         }
-        break;
         }
 
     } else{ //FUZZY
