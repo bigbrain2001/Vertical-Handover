@@ -24,8 +24,5 @@ simple loadCondGen{
      double TransferRate_Min;
      double TransferRate_Max;
  gates:
- //input rxCondGen;
  output txCondGen;   
-    
-    
 }

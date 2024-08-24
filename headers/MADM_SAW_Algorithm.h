@@ -13,7 +13,7 @@
 #include <omnetpp.h>
 using namespace omnetpp;
 
-class MADM_SAW_Algorithm : public cSimpleModule
+class MADM_Algorithm : public cSimpleModule
 {
 private:
     //cMessage *sendMessageEvent;
@@ -21,8 +21,8 @@ private:
 
 
 public:
-    MADM_SAW_Algorithm();
-    virtual ~MADM_SAW_Algorithm();
+    MADM_Algorithm();
+    virtual ~MADM_Algorithm();
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

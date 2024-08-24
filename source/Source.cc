@@ -18,16 +18,13 @@ void Source::initialize()
 {
     file_Size_min = par("file_Size_min").intValue();
     file_Size_max = par("file_Size_max").intValue();
-    file_Size = (int)uniform(file_Size_min, file_Size_max);
-    sendMessageEvent = new cMessage("start");
-    currentfileSize = file_Size*8;
-    file_split_size = 1500*8;
-    //file_split_size = par("fileSize").intValue();
-    //fileSize = uniform(1000000, 3000000) //random file size of 1MB - 3 MB
-    //file_split_size = uniform(1400, 1500) //split each file into size 1400 - 1450 byte splits
+    file_Size = (int)uniform(std::max(0, file_Size_min), std::max(1, file_Size_max+1));
+    currentfileSize = file_Size*8; //converts to bits
+    file_split_size = par("fileSplitSize").intValue(); //converts to bits
+    file_split_size = std::max(0, std::min(1500, file_split_size))*8;
     MAX_SIM = par("MAX_SIM_TIME").doubleValue();
+    sendMessageEvent = new cMessage("start");
     scheduleAt(simTime(), sendMessageEvent);
-
 }
 
 void Source::handleMessage(cMessage *msg)
@@ -36,6 +33,7 @@ void Source::handleMessage(cMessage *msg)
     //stops the app at a predetermined simulation time (100k seconds for example)
     double simulationTime  = simTime().dbl();
     if(simulationTime >= MAX_SIM){
+        delete msg;
         endSimulation();
     }
     //Splits the file into multiple IP packets over the course of self cycles and sends them to the storage element in the server
@@ -62,23 +60,16 @@ void Source::handleMessage(cMessage *msg)
                 file_part->par("packetSize") = file_split_size;
                 currentfileSize -= file_split_size;
                 send(file_part, "txPackets");
-                //cancelEvent(sendMessageEvent);
-                //scheduleAt(simTime(),sendMessageEvent); //transmits data at a certain delay
-                //break;
-
             }
 
 
         }
     }
     else if(msg->arrivedOn("rxEOF")){
-        file_Size = (int)uniform(file_Size_min,file_Size_max);
+        file_Size = (int)uniform(std::max(0, file_Size_min), std::max(1, file_Size_max+1));
         currentfileSize = file_Size*8; //resets file size
         delete msg;
-        //cancelAndDelete(sendMessageEvent);
-        //endSimulation();
         scheduleAt(simTime(),sendMessageEvent); //restarts data transfer immediately
-
     }
 
 

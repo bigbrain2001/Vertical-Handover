@@ -24,7 +24,7 @@
 			<xa>0</xa>
 			<xb>0</xb>
 			<xc>18</xc>
-			<xd>24</xd>
+			<xd>30</xd>
 		</term>
 		<term>
 			<name>M</name>
@@ -55,7 +55,7 @@
 			<xa>0</xa>
 			<xb>0</xb>
 			<xc>18</xc>
-			<xd>24</xd>
+			<xd>30</xd>
 		</term>
 		<term>
 			<name>M</name>
@@ -120,69 +120,69 @@
 	<rule>
 		<p1>L</p1>
 		<p2>L</p2>
-		<c>WR</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>L</p1>
 		<p2>M</p2>
-		<c>WS</c>
+		<c>WR</c>
 	</rule>
 
 	<rule>
 		<p1>L</p1>
 		<p2>H</p2>
-		<c>SS</c>
+		<c>WS</c>
 	</rule>
 	<rule>
 		<p1>L</p1>
 		<p2>VH</p2>
-		<c>SS</c>
+		<c>WS</c>
 	</rule>
 	<rule>
 		<p1>M</p1>
 		<p2>L</p2>
-		<c>WR</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>M</p1>
 		<p2>M</p2>
-		<c>WS</c>
+		<c>WR</c>
 	</rule>
 
 	<rule>
 		<p1>M</p1>
 		<p2>H</p2>
-		<c>SS</c>
+		<c>WR</c>
 	</rule>
 	<rule>
 		<p1>M</p1>
 		<p2>VH</p2>
-		<c>SS</c>
+		<c>WS</c>
 	</rule>
 
 	<rule>
 		<p1>H</p1>
 		<p2>L</p2>
-		<c>WR</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>H</p1>
 		<p2>M</p2>
-		<c>WS</c>
+		<c>SR</c>
 	</rule>
 	<rule>
 		<p1>H</p1>
 		<p2>H</p2>
-		<c>WS</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>H</p1>
 		<p2>VH</p2>
-		<c>SS</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
@@ -194,18 +194,18 @@
 	<rule>
 		<p1>VH</p1>
 		<p2>M</p2>
-		<c>WR</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>VH</p1>
 		<p2>H</p2>
-		<c>WS</c>
+		<c>SR</c>
 	</rule>
 
 	<rule>
 		<p1>VH</p1>
 		<p2>VH</p2>
-		<c>SS</c>
+		<c>SR</c>
 	</rule>
 </FLC>

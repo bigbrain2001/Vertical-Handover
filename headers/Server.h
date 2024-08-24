@@ -25,9 +25,9 @@ private:
     cQueue queue;
     int nrNetworks;
     double networkTransferRates[20];
-    bool waiting_for_Alg = true;
+    int waiting_for_Alg = -2;
     double transfer_rate;
-    int chosenNet;
+    int chosenNet = -1;
     int alg_select;
     //double fastest_transfer_rate_change_time = DBL_MAX;
     //double changeTime[20];

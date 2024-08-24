@@ -15,7 +15,7 @@
 
 simple radioCondGen{
  parameters:
-     double radioTimeModifier @unit(s); //time for reschedule of the module
+     double radioTimeModifier @unit(s);
      double meanForRadioNormaldistriburion;
      double radioDeviationNormalValue;
  	 double init_radio_transfer_capacity;
@@ -24,6 +24,4 @@ simple radioCondGen{
      double TransferRate_Max;
  gates:
  output txRCondGen;   
-    
-    
 }

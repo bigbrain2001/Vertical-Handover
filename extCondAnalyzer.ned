@@ -16,7 +16,6 @@
 
 
 simple extCondAnalyzer{
- 
  parameters:
 	int net_load_select;
  	int UMTS_capacity;
@@ -26,7 +25,5 @@ simple extCondAnalyzer{
      input rxRadio;
      input rxServer;
      output txDestination; //sends the packets from the server through the netowrk to it's destination
-	 output txServer; //sends the transfer rate to the server
-     
-     
+	 output txServer; //sends the network data to the server
 }
