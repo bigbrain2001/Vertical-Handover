@@ -593,52 +593,38 @@ void FLC::handleMessage(cMessage *msg)
 
         }
     }
-    if(init_contor <= networkSize){
+    if(init_contor < networkSize-1){
         init_contor++;
     }
     else{
         bestNetwork = -1;
         //best_result = -1;
+        ev << "Calculez nou UP" << endl;
+        int UP = uniform(0,100);
         for(int i=0;i < networkSize; i++){
-            ev << "Calculez nou HP" << endl;
-            //int wantedDelay = 10;//(int)getParentModule()->par("delayLimit");
-            //int currentDelay = 15;//round((double)getParentModule()->getSubmodule("netwrk")->par("meanDelayHP"));
-            //int W_HP = 4;//(int)getParentModule()->getSubmodule("hp_fifo")->par("weight");
-            //int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
 
-            //int new_W_HP = W_HP;
-            //int diff = wantedDelay - currentDelay;
+            int netLoad = (int)trunc(networkLoad[i]);
 
-            int UP = uniform(0,100);
-            int diff = (int)trunc(networkLoad[i]);
+            ev<<" netLoad nescalat = "<<netLoad<<"\n";
 
-            //qtime.record (currentDelay);
-            ev<<" Dif nescalat = "<<diff<<"\n";
-
-            diff = scale(0, 99, 0, 100, diff); //original vector
+            netLoad = scale(0, 99, 0, 100, netLoad); //original vector
             UP = scale(0, 99, 0, 100, UP);
-            ev<<" Dif scalat = "<<diff<<"\n";
+            ev<<" netLoad scalat = "<<netLoad<<"\n";
 
-            //int delta = 0;//(int) getParentModule()->par("delta");
-            int inp[2]={diff,UP};
+            int inp[2]={netLoad,UP};
 
             int result = fuzzy_inference(inp,2, delta_f);
             EV << "result non rounded " << result << endl;
-            //result_dep.record (result);
 
             int res = round(scale(0, 99, 0, 100, result));
             ev<<" Result = "<<result<<"\nRes= "<<res<<"\n";
             best_fuzzy_results[i] = res;
-            //if(res > best_result){
-                //best_result = res;
-
-                //bestNetwork = i;
-            //}
         }
         int best_result=-1;
         int best_transfer = -1;
         for(int i=0;i<networkSize;i++){
             if(best_result < best_fuzzy_results[i]){
+                best_result = best_fuzzy_results[i];
                 best_transfer = transferRates[i];
                 bestNetwork = i;
             }
@@ -648,7 +634,6 @@ void FLC::handleMessage(cMessage *msg)
                 }
             }
         }
-        //qtimew.record(new_W_HP);
         cMessage *job = new cMessage("Selection");
         job->addPar("Transfer_Rate");
         job->par("Transfer_Rate") = transferRates[bestNetwork];

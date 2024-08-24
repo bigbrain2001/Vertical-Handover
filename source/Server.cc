@@ -30,18 +30,16 @@ void Server::initialize()
 
 void Server::processQueues(double transfer, int retea)
 {
-
     // If a fastest network is found, send packets
     if (retea != -1) {
         // Send packets from the queue with a transfer rate of packetSize/transferRate
         if (!queue.isEmpty()) {
             cMessage *file_part = (cMessage *)queue.pop();
             int packetSizee = (int)file_part->par("packetSize");
-            double transfer_rate = (double)packetSizee/transfer;
+            double delay = (double)packetSizee/transfer;
             send(file_part,"txNetwork",retea);
-            scheduleAt(simTime() + transfer_rate,sendMessageEvent);
+            scheduleAt(simTime() + delay,sendMessageEvent);
         }
-
     }
 }
 
@@ -50,7 +48,7 @@ void Server::handleMessage(cMessage *msg)
 {
     if(msg->arrivedOn("rxPackets")){
             queue.insert(msg);
-        if(!waiting_for_Alg){
+        if(chosenNet!=(-1)){
             if(!(sendMessageEvent->isScheduled())){
                 scheduleAt(simTime(),sendMessageEvent);
             }
@@ -67,21 +65,25 @@ void Server::handleMessage(cMessage *msg)
                     EV << "NetworkLoad " << i << " " << (double)msg->par("netLoad") << endl;
                     send(msg,"txFuzzy",i);
                 }
-                waiting_for_Alg = true;
-
             }
         }
+        waiting_for_Alg++;
+        EV << waiting_for_Alg << endl;
     }
     else if(msg->arrivedOn("rxDestEOF")){
         send(msg,"txSourceEOF");//restarts the generator
     }
     else if(msg->arrivedOn("rxAlg") || msg->arrivedOn("rxFuzzyAlg")){
-        waiting_for_Alg = false;
-        transfer_rate = (double)msg->par("Transfer_Rate");
-        chosenNet = (int)msg->par("select_network");
+        waiting_for_Alg--;
+        EV << waiting_for_Alg << endl;
+        if(waiting_for_Alg==0){
+            transfer_rate = (double)msg->par("Transfer_Rate");
+            chosenNet = (int)msg->par("select_network");
+            EV << chosenNet << endl;
+        }
         delete msg;
         if(!(sendMessageEvent->isScheduled())){
-            scheduleAt(simTime(),sendMessageEvent);
+            scheduleAt(simTime(), sendMessageEvent);
         }
     }
     if(msg->isSelfMessage()){
