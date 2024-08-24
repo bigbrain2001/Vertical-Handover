@@ -11,9 +11,6 @@ using namespace omnetpp;
 
 class Destination : public cSimpleModule
 {
-private:
-    simsignal_t lifetimeSignal;
-    simsignal_t lifetimeSignal_per_file;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
@@ -28,6 +25,7 @@ private:
     cOutVector packets_per_network1;
     cOutVector packets_per_network2;
     int fileSize[FILE_SIZE_];
+    double nrPackets[3] = {0,0,0};
     int currentFile=0;
     int algorithm_selected;
     int net_load_selected;

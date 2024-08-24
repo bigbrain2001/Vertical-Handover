@@ -17,17 +17,14 @@ simple Server{
     parameters:
         int networkSize;
         int selection;
-    
     gates:
         input rxPackets; //file splits recieved from Source
-        input rxFuzzyAlg; //data from LFA
-        input rxAlg;		//data from Alg
+        input rxFuzzyAlg; //data from FLA
+        input rxAlg;		//data from MADM Alg
         input rxDestEOF;	//EOF message from the destination
-        input rxNetwork[networkSize]; //to recieve transfer rate from each network
+        input rxNetwork[networkSize]; //to recieve updates from each network
         output txSourceEOF;  //EOF message to generator to restart the file generator
         output txFuzzy[networkSize]; //communication to fuzzy
-        output txAlgorithm[networkSize]; //communication to cs algorithm
-        output txNetwork[networkSize]; //data files sent to the network
-
-        
+        output txAlgorithm[networkSize]; //communication to MADM algorithm
+        output txNetwork[networkSize]; //data files sent to the network     
 }

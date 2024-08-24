@@ -24,5 +24,4 @@ simple Destination{
  gates:
   	input rxData[networkSize];
   	output txSourceEOF;   
-    
 }
