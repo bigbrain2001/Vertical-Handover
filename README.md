@@ -32,10 +32,11 @@ Pentru a putea porni este nevoie de următorii pași:
 ```
 Pasul 1: Descărcați proiectul de pe GitHub.
 Pasul 2: Deschideți simulatorul de OMNET++ și deschideți fișierul VHO ca proiect din File -> Open Projects from File System...
-Pasul 3: Creeați o configurare nouă pentru a simula sistemul.
+Pasul 3: Creeați o simulare OMNET++ nouă selectând VerticalHandover.ned, Run -> Run As -> Omnet++ Simulation
+pentru a compila sistemul.
 Pasul 4: Simulați sistemul și alegeți configurarea dorită.
 SAU
-Pasul 4: Compilați sistemul și din Run -> Run Configurations și în datele pentru fișierul de simulare a sistemului,
+Pasul 4: După compilarea sistemului, selectați meniul Run -> Run Configurations iar în datele pentru fișierul de simulare a sistemului,
 în Main->Config Name, alegeți configurarea dorită, APPLY și RUN.
 ```
 
